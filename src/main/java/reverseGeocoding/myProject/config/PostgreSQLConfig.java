@@ -25,9 +25,9 @@ public class PostgreSQLConfig implements ApplicationRunner {
             System.out.println("userName > " + connection.getMetaData().getUserName());
 
             Statement statement = connection.createStatement();
-            String sql = "CREATE TABLE TBL_TEST(NO INTEGER NOT NULL, TEST_NAME VARCHAR(255), PRIMARY KEY (NO))";
-            statement.executeUpdate(sql);
+//            String sql = "CREATE TABLE TBL_TEST(NO INTEGER NOT NULL, TEST_NAME VARCHAR(255), PRIMARY KEY (NO))";
+//            statement.executeUpdate(sql);
         }
-        jdbcTemplate.execute("INSERT INTO TBL_TEST VALUES (1, 'paladyn')");
+//        jdbcTemplate.execute("INSERT INTO TBL_TEST VALUES (1, 'paladyn')");
     }
 }
