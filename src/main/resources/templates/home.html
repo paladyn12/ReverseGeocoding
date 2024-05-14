@@ -15,6 +15,12 @@
     <label for="longitude">경도:</label>
     <input type="text" id="longitude" placeholder="경도를 입력하세요">
     <button onclick="sendCoordinates()">입력</button>
+    <button onclick="reverseGeocode()">역지오코딩</button>
+</div>
+<div>
+    <label for="roadAddr">도로명주소</label>
+    <input type="text" id="roadAddr" placeholder="도로명주소를 입력하세요">
+    <button onclick="geocode()">지오코딩</button>
 </div>
 
 <script>
@@ -23,7 +29,7 @@
 
     var mapOptions = {
         center: new naver.maps.LatLng(latitude, longitude),
-        zoom: 10
+        zoom: 15
     };
 
     var map = new naver.maps.Map('map', mapOptions);
@@ -38,6 +44,28 @@
             alert("위도와 경도를 입력하세요.");
         }
     }
+    function reverseGeocode() {
+        var latitude = document.getElementById('latitude').value;
+        var longitude = document.getElementById('longitude').value;
+
+        if (latitude && longitude) {
+            // 역지오코딩 버튼 클릭 시 '/address/rg' URL로 쿼리 파라미터 전송
+            window.location.href = "/address/rg?latitude=" + latitude + "&longitude=" + longitude;
+        } else {
+            alert("위도와 경도를 입력하세요.");
+        }
+    }
+    function geocode() {
+        var roadAddr = document.getElementById('roadAddr').value;
+
+        if (roadAddr) {
+            // 지오코딩 버튼 클릭 시 '/address/g' URL로 쿼리 파라미터 전송
+            window.location.href = "/address/g?roadAddr=" + roadAddr;
+        } else {
+            alert("위도와 경도를 입력하세요.");
+        }
+    }
+
 </script>
 </body>
 </html>

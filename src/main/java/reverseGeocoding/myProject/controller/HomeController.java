@@ -22,3 +22,5 @@ public class HomeController {
         return "home";
     }
 }
+//    Client ID : o6w1qaagu0
+//    Client Secret : 0lkbNtWJ69Whp88c2QGObSG9c1KSzh2Ul7hzwMdc
