@@ -11,6 +11,7 @@ PostgreSQL의 PostGis 사용<br/>
 # 기술 스택
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
 <img src="https://img.shields.io/badge/spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white">
+<img src="https://img.shields.io/badge/jpa-6DB33F?style=for-the-badge&logo=jpa&logoColor=white">
 <img src="https://img.shields.io/badge/PostgreSQL-045FB4?style=for-the-badge&logo=PostgreSQLf&logoColor=white">
 <img src="https://img.shields.io/badge/PostGis-045FB4?style=for-the-badge&logo=PostGisf&logoColor=white">
 <img src="https://img.shields.io/badge/JDBC-6DB33F/?style=for-the-badge&logo=JDBC&logoColor=white">
