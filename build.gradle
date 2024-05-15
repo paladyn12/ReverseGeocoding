@@ -28,12 +28,17 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//postgreSQL
-	implementation 'org.postgresql:postgresql:42.5.0'
-	//jdbc
+	// postgreSQL
+	implementation 'org.postgresql:postgresql'
+	// hibernate-spatial
+	implementation 'org.hibernate:hibernate-spatial:6.2.2.Final'
+	// json
+	implementation 'org.json:json:20190722'
+	// jdbc
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	//jpa
+	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 }
 
 tasks.named('test') {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,16 +14,34 @@
     <input type="text" id="latitude" placeholder="위도를 입력하세요">
     <label for="longitude">경도:</label>
     <input type="text" id="longitude" placeholder="경도를 입력하세요">
-    <button onclick="sendCoordinates()">입력</button>
     <button onclick="reverseGeocode()">역지오코딩</button>
 </div>
 <div>
-    <label for="roadAddr">도로명주소</label>
-    <input type="text" id="roadAddr" placeholder="도로명주소를 입력하세요">
+    <label for="roadAddr">도로명 주소</label>
+    <input type="text" id="roadAddr" placeholder="도로명 주소를 입력하세요">
     <button onclick="geocode()">지오코딩</button>
 </div>
+<div>
+    <h2>최근 생성된 Space 목록</h2>
+    <ul>
+        <!-- Spaces 컨트롤러에서 가져온 spaces 목록을 반복하여 표시 -->
+        <li th:each="space : ${spaces}">
+            <!-- 각 Space 객체의 정보 표시 -->
+            <span th:text="${space.getRoadAddr()}"></span>
+            <span>( 위도 : <span th:text="${space.getPoint().getX()}"></span></span>
+            <span>경도 : <span th:text="${space.getPoint().getY()}"></span></span>
+            <span>)</span>
+            </li>
+    </ul>
+</div>
 
-<script>
+<script th:inline="javascript">
+
+    window.onload = function () {
+        if([[${message}]] != null) {
+            alert([[${message}]])
+        }
+    }
     var latitude = [[${latitude}]]
     var longitude = [[${longitude}]]
 
@@ -34,16 +52,6 @@
 
     var map = new naver.maps.Map('map', mapOptions);
 
-    function sendCoordinates() {
-        var latitude = document.getElementById('latitude').value;
-        var longitude = document.getElementById('longitude').value;
-
-        if (latitude && longitude) {
-            window.location.href = "?latitude=" + latitude + "&longitude=" + longitude;
-        } else {
-            alert("위도와 경도를 입력하세요.");
-        }
-    }
     function reverseGeocode() {
         var latitude = document.getElementById('latitude').value;
         var longitude = document.getElementById('longitude').value;
