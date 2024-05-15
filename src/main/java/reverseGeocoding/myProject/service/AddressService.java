@@ -7,14 +7,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reverseGeocoding.myProject.Point;
 
 @Service
 @Slf4j
 public class AddressService {
 
-    public void reverseGeocoding(String latitude, String longitude) {
+    public void reverseGeocoding(Point point) {
 
-        String coords = longitude + "," + latitude;
+        String coords = point.getLongitude() + "," + point.getLatitude();
 
         // 역지오코딩 API 요청 url
         String apiURL = "https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=" + coords + "&output=json&orders=addr,admcode,roadaddr";

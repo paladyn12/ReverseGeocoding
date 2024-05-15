@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class HomeController {
 
     @GetMapping("/")
-    public String home(@RequestParam(defaultValue = "37") String latitude,
-                       @RequestParam(defaultValue = "127") String longitude, Model model) {
+    public String home(@RequestParam(defaultValue = "37.5247809") String latitude,
+                       @RequestParam(defaultValue = "126.9556553") String longitude, Model model) {
         log.info("latitude={}",latitude);
         log.info("longitude={}",longitude);
 
@@ -22,5 +22,3 @@ public class HomeController {
         return "home";
     }
 }
-//    Client ID : o6w1qaagu0
-//    Client Secret : 0lkbNtWJ69Whp88c2QGObSG9c1KSzh2Ul7hzwMdc

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import reverseGeocoding.myProject.Point;
 import reverseGeocoding.myProject.service.AddressService;
 
 @Controller
@@ -19,7 +20,8 @@ public class AddressController {
     @GetMapping("/rg")
     public void reverseGeocoding(@RequestParam String latitude,
                                  @RequestParam String longitude) {
-        addressService.reverseGeocoding(latitude, longitude);
+        Point point = new Point(latitude, longitude);
+        addressService.reverseGeocoding(point);
     }
 
     @GetMapping("/g")
