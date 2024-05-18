@@ -84,7 +84,6 @@ public class AddressService {
                     addr.append(name).append(" ");
                 }
             }
-
             // 추출한 두 주소 합치기
             String roadAddr = addr + detailAddr;
             log.info("roadAddr={}", roadAddr);
