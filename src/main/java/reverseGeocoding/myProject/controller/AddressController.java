@@ -50,7 +50,6 @@ public class AddressController {
         model.addAttribute("longitude", point.getY());
 
         return "home";
-
     }
 
     @GetMapping("/g")

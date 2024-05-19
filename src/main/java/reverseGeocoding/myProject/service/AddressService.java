@@ -126,5 +126,6 @@ public class AddressService {
         return createPoint(latitude, longitude);
 
         // 도로명 주소도 받아 Space 객체 만들어 반환 예정
+
     }
 }
