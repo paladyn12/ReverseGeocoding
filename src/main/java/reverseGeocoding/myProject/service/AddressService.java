@@ -94,7 +94,6 @@ public class AddressService {
         }
 
         //도로명 주소 받아서 반환, controller에서 그 값을 template에 넘겨 alert
-
     }
 
     public Point geocoding(String roadAddr) {
