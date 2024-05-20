@@ -12,10 +12,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import reverseGeocoding.myProject.domain.SpaceDto;
-import reverseGeocoding.myProject.domain.Space;
 import reverseGeocoding.myProject.repository.SpaceRepository;
 
 import java.util.List;
@@ -26,6 +26,7 @@ import java.util.List;
 public class AddressService {
 
     private final SpaceRepository spaceRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     // 위도와 경도를 받아 Point 반환
     public Point createPoint(double latitude, double longitude) {
@@ -126,6 +127,38 @@ public class AddressService {
         return createPoint(latitude, longitude);
 
         // 도로명 주소도 받아 Space 객체 만들어 반환 예정
+
+    }
+
+    public double distance(Point stdPoint, Point tgPoint) {
+        String sql = String.format(
+                "SELECT ST_DistanceSphere(" +
+                        "ST_GeomFromText('POINT(%f %f)', 4326), " +
+                        "ST_GeomFromText('POINT(%f %f)', 4326)" +
+                        ")",
+                stdPoint.getY(), stdPoint.getX(), tgPoint.getY(), tgPoint.getX()
+        );
+
+        return jdbcTemplate.queryForObject(sql, Double.class);
+    }
+
+    public void poi(String roadAddr, String keyword) {
+
+        // 주변 장소 요청 api
+        String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + keyword +
+        "&display=5";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Naver-Client-Id", "waVkWeT0zvksIhH_liyD");
+        headers.set("X-Naver-Client-Secret", "rEyQ0vokyh");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        // RestTemplate 객체 생성, API 호출 및 응답 수신
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.GET, entity, String.class);
+        String responseBody = response.getBody();
+
+        log.info(responseBody);
 
     }
 }

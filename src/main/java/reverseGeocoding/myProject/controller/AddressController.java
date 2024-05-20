@@ -54,15 +54,50 @@ public class AddressController {
 
     @GetMapping("/g")
     public String geocoding(@RequestParam String roadAddr, Model model) {
-        Point geocodedPoint = addressService.geocoding(roadAddr);
-        addressService.saveSpace(geocodedPoint, roadAddr);
+        Point geocodingedPoint = addressService.geocoding(roadAddr);
+        addressService.saveSpace(geocodingedPoint, roadAddr);
 
         List<Space> spaces = spaceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         model.addAttribute("spaces", spaces);
 
-        model.addAttribute("message", "위도 : " + geocodedPoint.getX() + ", 경도 : " + geocodedPoint.getY());
-        model.addAttribute("latitude", geocodedPoint.getX());
-        model.addAttribute("longitude", geocodedPoint.getY());
+        model.addAttribute("message", "위도 : " + geocodingedPoint.getX() + ", 경도 : " + geocodingedPoint.getY());
+        model.addAttribute("latitude", geocodingedPoint.getX());
+        model.addAttribute("longitude", geocodingedPoint.getY());
+
+        return "home";
+    }
+
+    @GetMapping("/d")
+    public String distance(@RequestParam String stdRoadAddr,
+                           @RequestParam String tgRoadAddr, Model model) {
+        Point stdPoint = addressService.geocoding(stdRoadAddr);
+        Point tgPoint = addressService.geocoding(tgRoadAddr);
+
+        addressService.saveSpace(stdPoint, stdRoadAddr);
+        addressService.saveSpace(tgPoint, tgRoadAddr);
+
+        double distance = addressService.distance(stdPoint, tgPoint);
+
+        List<Space> spaces = spaceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        model.addAttribute("spaces", spaces);
+
+        model.addAttribute("message", "두 주소 사이의 거리는 " + (distance/1000) + "Km 입니다.");
+        model.addAttribute("latitude", stdPoint.getX());
+        model.addAttribute("longitude", stdPoint.getY());
+
+        return "home";
+    }
+
+    @GetMapping("/poi")
+    public String poi(@RequestParam String roadAddr,
+                      @RequestParam String keyword, Model model) {
+        addressService.poi(roadAddr, keyword);
+
+        Point geocodingedPoint = addressService.geocoding(roadAddr);
+
+        model.addAttribute("message", "위도 : " + geocodingedPoint.getX() + ", 경도 : " + geocodingedPoint.getY());
+        model.addAttribute("latitude", geocodingedPoint.getX());
+        model.addAttribute("longitude", geocodingedPoint.getY());
 
         return "home";
     }
