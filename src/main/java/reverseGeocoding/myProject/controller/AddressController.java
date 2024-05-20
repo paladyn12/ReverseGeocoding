@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import reverseGeocoding.myProject.domain.Space;
+import reverseGeocoding.myProject.domain.entity.Space;
 import reverseGeocoding.myProject.repository.SpaceRepository;
 import reverseGeocoding.myProject.service.AddressService;
 
@@ -88,17 +88,25 @@ public class AddressController {
         return "home";
     }
 
-    @GetMapping("/poi")
-    public String poi(@RequestParam String roadAddr,
-                      @RequestParam String keyword, Model model) {
-        addressService.poi(roadAddr, keyword);
+    @GetMapping("/dr")
+    public String direction(@RequestParam String stdRoadAddr,
+                           @RequestParam String tgRoadAddr, Model model) {
+        Point stdPoint = addressService.geocoding(stdRoadAddr);
+        Point tgPoint = addressService.geocoding(tgRoadAddr);
 
-        Point geocodingedPoint = addressService.geocoding(roadAddr);
+        addressService.saveSpace(stdPoint, stdRoadAddr);
+        addressService.saveSpace(tgPoint, tgRoadAddr);
 
-        model.addAttribute("message", "위도 : " + geocodingedPoint.getX() + ", 경도 : " + geocodingedPoint.getY());
-        model.addAttribute("latitude", geocodingedPoint.getX());
-        model.addAttribute("longitude", geocodingedPoint.getY());
+        String direction = addressService.direction(stdPoint, tgPoint);
+
+        List<Space> spaces = spaceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        model.addAttribute("spaces", spaces);
+
+        model.addAttribute("message", direction);
+        model.addAttribute("latitude", stdPoint.getX());
+        model.addAttribute("longitude", stdPoint.getY());
 
         return "home";
     }
+
 }

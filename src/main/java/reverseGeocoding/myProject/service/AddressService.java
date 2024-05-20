@@ -15,10 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import reverseGeocoding.myProject.domain.SpaceDto;
+import reverseGeocoding.myProject.domain.dto.SpaceDto;
 import reverseGeocoding.myProject.repository.SpaceRepository;
 
-import java.util.List;
 
 @Service
 @Slf4j
@@ -142,15 +141,18 @@ public class AddressService {
         return jdbcTemplate.queryForObject(sql, Double.class);
     }
 
-    public void poi(String roadAddr, String keyword) {
+    public String direction(Point stdPoint, Point tgPoint) {
 
-        // 주변 장소 요청 api
-        String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + keyword +
-        "&display=5";
+        String std = stdPoint.getY() + "," + stdPoint.getX();
+        String tg = tgPoint.getY() + "," + tgPoint.getX();
+
+        // 경로 검색 API 요청 url
+        String apiURL = "https://naveropenapi.apigw.ntruss.com/map-direction/v1/driving?start=" + std + "&goal=" + tg;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Naver-Client-Id", "waVkWeT0zvksIhH_liyD");
-        headers.set("X-Naver-Client-Secret", "rEyQ0vokyh");
+        headers.set("X-NCP-APIGW-API-KEY-ID", "o6w1qaagu0");
+        headers.set("X-NCP-APIGW-API-KEY", "0lkbNtWJ69Whp88c2QGObSG9c1KSzh2Ul7hzwMdc");
+        headers.set("Accept", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         // RestTemplate 객체 생성, API 호출 및 응답 수신
@@ -158,7 +160,21 @@ public class AddressService {
         ResponseEntity<String> response = restTemplate.exchange(apiURL, HttpMethod.GET, entity, String.class);
         String responseBody = response.getBody();
 
-        log.info(responseBody);
+        // 총 거리 및 소요시간 받기
+        JSONObject jsonObject = new JSONObject(responseBody);
+        JSONObject route = jsonObject.getJSONObject("route");
+        JSONArray traoptimal = route.getJSONArray("traoptimal");
+        JSONObject summary = traoptimal.getJSONObject(0);
+        JSONObject getDistanceAndDuration = summary.getJSONObject("summary");
 
+
+        log.info(String.valueOf(getDistanceAndDuration));
+        Integer distance = (Integer) getDistanceAndDuration.get("distance");
+        Integer duration = (Integer) getDistanceAndDuration.get("duration");
+
+        double dis2double = distance.doubleValue();
+        double dur2double = duration.doubleValue();
+
+        return "목적지 까지의 거리 : " + dis2double/1000 + "Km, 예상 소요 시간 " + (int) dur2double/60000 + "분 입니다.";
     }
 }

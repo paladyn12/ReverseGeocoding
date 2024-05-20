@@ -1,8 +1,9 @@
-package reverseGeocoding.myProject.domain;
+package reverseGeocoding.myProject.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.locationtech.jts.geom.Point;
+import reverseGeocoding.myProject.domain.entity.Space;
 
 @Data
 @AllArgsConstructor

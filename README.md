@@ -15,3 +15,4 @@ PostgreSQL의 PostGis 사용<br/>
 <img src="https://img.shields.io/badge/PostgreSQL-045FB4?style=for-the-badge&logo=PostgreSQLf&logoColor=white">
 <img src="https://img.shields.io/badge/PostGis-045FB4?style=for-the-badge&logo=PostGisf&logoColor=white">
 <img src="https://img.shields.io/badge/JDBC-6DB33F/?style=for-the-badge&logo=JDBC&logoColor=white">
+<img src="https://img.shields.io/badge/Open Feign-6DB33F/?style=for-the-badge&logo=Open Feign&logoColor=white">

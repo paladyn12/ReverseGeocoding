@@ -2,15 +2,13 @@ package reverseGeocoding.myProject.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.jts.geom.Point;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import reverseGeocoding.myProject.domain.Space;
+import reverseGeocoding.myProject.domain.entity.Space;
 import reverseGeocoding.myProject.repository.SpaceRepository;
-import reverseGeocoding.myProject.service.AddressService;
 
 import java.util.List;
 

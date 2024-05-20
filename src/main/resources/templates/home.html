@@ -22,19 +22,20 @@
     <button onclick="geocode()">지오코딩</button>
 </div>
 <div>
-    <label for="stdRoadAddr_d">시작 도로명 주소</label>
-    <input type="text" id="stdRoadAddr_d" placeholder="시작 도로명 주소 입력">
-    <label for="tgRoadAddr_d">도착 도로명 주소</label>
-    <input type="text" id="tgRoadAddr_d" placeholder="도착 도로명 주소 입력">
-    <button onclick="distance()">거리 재기</button>
+    <label for="stdRoadAddr_distance">시작 주소</label>
+    <input type="text" id="stdRoadAddr_distance" placeholder="시작 도로명 주소 입력">
+    <label for="tgRoadAddr_distance">도착 주소</label>
+    <input type="text" id="tgRoadAddr_distance" placeholder="도착 도로명 주소 입력">
+    <button onclick="distance()">거리 계산</button>
 </div>
 <div>
-    <label for="roadAddr_poi">도로명 주소</label>
-    <input type="text" id="roadAddr_poi" placeholder="도로명 주소 입력">
-    <label for="keyword_poi">검색어</label>
-    <input type="text" id="keyword_poi" placeholder="장소 키워드(ex.카페, 도서관)">
-    <button onclick="poi()">주변 장소 찾기</button>
+    <label for="stdRoadAddr_direction">시작 주소</label>
+    <input type="text" id="stdRoadAddr_direction" placeholder="시작 도로명 주소 입력">
+    <label for="tgRoadAddr_direction">도착 주소</label>
+    <input type="text" id="tgRoadAddr_direction" placeholder="도착 도로명 주소 입력">
+    <button onclick="direction()">경로 찾기</button>
 </div>
+
 <div>
     <h2>최근 생성된 Space 목록</h2>
     <ul>
@@ -91,8 +92,8 @@
         }
     }
     function distance() {
-        var stdRoadAddr = document.getElementById('stdRoadAddr_d').value;
-        var tgRoadAddr = document.getElementById('tgRoadAddr_d').value;
+        var stdRoadAddr = document.getElementById('stdRoadAddr_distance').value;
+        var tgRoadAddr = document.getElementById('tgRoadAddr_distance').value;
 
         if (stdRoadAddr && tgRoadAddr) {
             window.location.href = "/address/d?stdRoadAddr=" + stdRoadAddr + "&tgRoadAddr=" + tgRoadAddr;
@@ -100,14 +101,14 @@
             alert("위도와 경도를 입력하세요.");
         }
     }
-    function poi() {
-        var roadAddr = document.getElementById('roadAddr_poi').value;
-        var keyword = document.getElementById('keyword_poi').value;
+    function direction() {
+        var stdRoadAddr = document.getElementById('stdRoadAddr_direction').value;
+        var tgRoadAddr = document.getElementById('tgRoadAddr_direction').value;
 
-        if (roadAddr && keyword) {
-            window.location.href = "/address/poi?roadAddr=" + roadAddr + "&keyword=" + keyword;
+        if (stdRoadAddr && tgRoadAddr) {
+            window.location.href = "/address/dr?stdRoadAddr=" + stdRoadAddr + "&tgRoadAddr=" + tgRoadAddr;
         } else {
-            alert("도로명 주소와 키워드를 입력하세요.");
+            alert("위도와 경도를 입력하세요.");
         }
     }
 
