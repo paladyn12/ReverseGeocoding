@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
+import org.locationtech.jts.geom.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reverseGeocoding.myProject.domain.dto.RouteDto;
 import reverseGeocoding.myProject.domain.dto.SpaceDto;
+import reverseGeocoding.myProject.domain.entity.Route;
+import reverseGeocoding.myProject.repository.RouteRepository;
 import reverseGeocoding.myProject.repository.SpaceRepository;
 
 
@@ -25,12 +25,30 @@ import reverseGeocoding.myProject.repository.SpaceRepository;
 public class AddressService {
 
     private final SpaceRepository spaceRepository;
+    private final RouteRepository routeRepository;
     private final JdbcTemplate jdbcTemplate;
 
     // 위도와 경도를 받아 Point 반환
     public Point createPoint(double latitude, double longitude) {
         GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
         return geometryFactory.createPoint(new Coordinate(latitude, longitude));
+    }
+
+    // 포인트 둘을 받아 Route 객체 저장
+    public void saveRoute(Point stdPoint, String stdRoadAddr, Point tgPoint, String tgRoadAddr) {
+        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+        LineString line = geometryFactory.createLineString(new Coordinate[]{
+                stdPoint.getCoordinate(),
+                tgPoint.getCoordinate()
+        });
+
+        if(routeRepository.existsByLineString(line)) {
+            log.info("이미 존재하는 루트정보");
+        } else {
+            RouteDto routeDto = new RouteDto(line, stdRoadAddr, tgRoadAddr);
+            routeRepository.save(routeDto.toEntity());
+        }
+
     }
 
     // Point와 도로명 주소로 Space 객체 저장, 이미 존재하는 Point이면 저장하지 않음

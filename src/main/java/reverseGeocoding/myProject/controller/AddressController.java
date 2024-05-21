@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import reverseGeocoding.myProject.domain.entity.Route;
 import reverseGeocoding.myProject.domain.entity.Space;
+import reverseGeocoding.myProject.repository.RouteRepository;
 import reverseGeocoding.myProject.repository.SpaceRepository;
 import reverseGeocoding.myProject.service.AddressService;
 
@@ -23,6 +25,7 @@ public class AddressController {
 
     private final AddressService addressService;
     private final SpaceRepository spaceRepository;
+    private final RouteRepository routeRepository;
 
 
     @GetMapping("/rg")
@@ -73,13 +76,16 @@ public class AddressController {
         Point stdPoint = addressService.geocoding(stdRoadAddr);
         Point tgPoint = addressService.geocoding(tgRoadAddr);
 
-        addressService.saveSpace(stdPoint, stdRoadAddr);
-        addressService.saveSpace(tgPoint, tgRoadAddr);
-
         double distance = addressService.distance(stdPoint, tgPoint);
 
+        addressService.saveRoute(stdPoint, stdRoadAddr, tgPoint, tgRoadAddr);
+
+
+
         List<Space> spaces = spaceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Route> routes = routeRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         model.addAttribute("spaces", spaces);
+        model.addAttribute("routes", routes);
 
         model.addAttribute("message", "두 주소 사이의 거리는 " + (distance/1000) + "Km 입니다.");
         model.addAttribute("latitude", stdPoint.getX());
@@ -94,13 +100,14 @@ public class AddressController {
         Point stdPoint = addressService.geocoding(stdRoadAddr);
         Point tgPoint = addressService.geocoding(tgRoadAddr);
 
-        addressService.saveSpace(stdPoint, stdRoadAddr);
-        addressService.saveSpace(tgPoint, tgRoadAddr);
-
         String direction = addressService.direction(stdPoint, tgPoint);
 
+        addressService.saveRoute(stdPoint, stdRoadAddr, tgPoint, tgRoadAddr);
+
         List<Space> spaces = spaceRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Route> routes = routeRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         model.addAttribute("spaces", spaces);
+        model.addAttribute("routes", routes);
 
         model.addAttribute("message", direction);
         model.addAttribute("latitude", stdPoint.getX());

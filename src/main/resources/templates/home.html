@@ -4,54 +4,146 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
-    <title>간단한 지도 표시하기</title>
+    <title>Reverse Geocoding</title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=o6w1qaagu0"></script>
+    <style>
+        body {
+            padding-top: 56px;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        #map {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-<div id="map" style="width:100%;height:400px;"></div>
-<div>
-    <label for="latitude_rgeo">위도:</label>
-    <input type="text" id="latitude_rgeo" placeholder="위도 입력">
-    <label for="longitude_rgeo">경도:</label>
-    <input type="text" id="longitude_rgeo" placeholder="경도 입력">
-    <button onclick="reverseGeocode()">역지오코딩</button>
-</div>
-<div>
-    <label for="roadAddr_geo">도로명 주소</label>
-    <input type="text" id="roadAddr_geo" placeholder="도로명 주소 입력">
-    <button onclick="geocode()">지오코딩</button>
-</div>
-<div>
-    <label for="stdRoadAddr_distance">시작 주소</label>
-    <input type="text" id="stdRoadAddr_distance" placeholder="시작 도로명 주소 입력">
-    <label for="tgRoadAddr_distance">도착 주소</label>
-    <input type="text" id="tgRoadAddr_distance" placeholder="도착 도로명 주소 입력">
-    <button onclick="distance()">거리 계산</button>
-</div>
-<div>
-    <label for="stdRoadAddr_direction">시작 주소</label>
-    <input type="text" id="stdRoadAddr_direction" placeholder="시작 도로명 주소 입력">
-    <label for="tgRoadAddr_direction">도착 주소</label>
-    <input type="text" id="tgRoadAddr_direction" placeholder="도착 도로명 주소 입력">
-    <button onclick="direction()">경로 찾기</button>
-</div>
-
-<div>
-    <h2>최근 생성된 Space 목록</h2>
-    <ul>
-        <!-- Spaces 컨트롤러에서 가져온 spaces 목록을 반복하여 표시 -->
-        <li th:each="space : ${spaces}">
-            <!-- 각 Space 객체의 정보 표시 -->
-            <span th:text="${space.getRoadAddr()}"></span>
-            <span>( 위도 : <span th:text="${space.getPoint().getX()}"></span></span>
-            <span>경도 : <span th:text="${space.getPoint().getY()}"></span></span>
-            <span>)</span>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="#">Reverse Geocoding</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#map">지도</a>
             </li>
-    </ul>
+            <li class="nav-item">
+                <a class="nav-link" href="#reverse-geocode">역지오코딩</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#geocode">지오코딩</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#distance">거리 계산</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#direction">시간 계산</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="map" class="border rounded" style="width:100%;height:400px;"></div>
+
+            <div id="reverse-geocode" class="my-4">
+                <h3>역지오코딩</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="latitude_rgeo">위도 입력</label>
+                        <input type="text" class="form-control" id="latitude_rgeo" placeholder="Latitude">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="longitude_rgeo">경도 입력</label>
+                        <input type="text" class="form-control" id="longitude_rgeo" placeholder="Longitude">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="reverseGeocode()">역지오코딩</button>
+            </div>
+
+            <div id="geocode" class="my-4">
+                <h3>지오코딩</h3>
+                <div class="form-group">
+                    <label for="roadAddr_geo">도로명 주소 입력</label>
+                    <input type="text" class="form-control" id="roadAddr_geo" placeholder="Roadname Address">
+                </div>
+                <button class="btn btn-primary" onclick="geocode()">지오코딩</button>
+            </div>
+
+            <div id="distance" class="my-4">
+                <h3>거리 계산</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="stdRoadAddr_distance">시작 도로명 주소 입력</label>
+                        <input type="text" class="form-control" id="stdRoadAddr_distance" placeholder="Start Roadname Address">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tgRoadAddr_distance">도착 도로명 주소 입력</label>
+                        <input type="text" class="form-control" id="tgRoadAddr_distance" placeholder="End Roadname Address">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="distance()">거리 계산</button>
+            </div>
+
+            <div id="direction" class="my-4">
+                <h3>시간 계산</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="stdRoadAddr_direction">시작 도로명 주소 입력</label>
+                        <input type="text" class="form-control" id="stdRoadAddr_direction" placeholder="Start Roadname Address">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tgRoadAddr_direction">도착 도로명 주소 입력</label>
+                        <input type="text" class="form-control" id="tgRoadAddr_direction" placeholder="End Roadname Address">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="direction()">시간 계산</button>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">공지사항</h5>
+                    <p class="card-text">도로명 주소는 세부 주소까지 입력해야 합니다.<br>(ex. 상명대학교: 서울특별시 종로구 홍지문2길 20)<br>(ex. 서울역: 서울특별시 용산구 한강대로 405)</p>
+                    <p class="card-text">도로명 주소가 없는 좌표가 있을 수 있습니다.<br>(ex. 위도: 37, 경도: 127)</p>
+                </div>
+            </div>
+
+            <div class="my-4">
+                <h2>최근 검색 주소</h2>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="space : ${spaces}">
+                        <span th:text="${space.getRoadAddr()}"></span>
+                        <span>( 위도 : <span th:text="${space.getPoint().getX()}"></span></span>
+                        <span>경도 : <span th:text="${space.getPoint().getY()}"></span></span>
+                        <span>)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="my-4">
+                <h2>최근 계산 경로</h2>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="route : ${routes}">
+                        <span>( 시작 주소 : <span th:text="${route.getStdRoadAddr()}"></span></span>
+                        <span>, 도착 주소 : <span th:text="${route.getTgRoadAddr()}"></span></span>
+                        <span>)</span>
+                        <span th:text="${route.getLineString()}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script th:src="@{/js/bootstrap.bundle.js}"></script>
 <script th:inline="javascript">
-
     window.onload = function () {
         if([[${message}]] != null) {
             alert([[${message}]])
@@ -69,7 +161,7 @@
     var markerOption = {
         position: new naver.maps.LatLng(latitude, longitude),
         map: map
-    }
+    };
     var marker = new naver.maps.Marker(markerOption);
 
     function reverseGeocode() {
@@ -88,7 +180,7 @@
         if (roadAddr) {
             window.location.href = "/address/g?roadAddr=" + roadAddr;
         } else {
-            alert("위도와 경도를 입력하세요.");
+            alert("도로명 주소를 입력하세요.");
         }
     }
     function distance() {
@@ -98,7 +190,7 @@
         if (stdRoadAddr && tgRoadAddr) {
             window.location.href = "/address/d?stdRoadAddr=" + stdRoadAddr + "&tgRoadAddr=" + tgRoadAddr;
         } else {
-            alert("위도와 경도를 입력하세요.");
+            alert("주소를 입력하세요.");
         }
     }
     function direction() {
@@ -108,10 +200,9 @@
         if (stdRoadAddr && tgRoadAddr) {
             window.location.href = "/address/dr?stdRoadAddr=" + stdRoadAddr + "&tgRoadAddr=" + tgRoadAddr;
         } else {
-            alert("위도와 경도를 입력하세요.");
+            alert("주소를 입력하세요.");
         }
     }
-
 </script>
 </body>
 </html>
